@@ -4,7 +4,7 @@ import com.crud.b7assessoria.entities.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "category")
+@Entity
 @Table(name = "category")
 @Getter
 @Setter
@@ -24,5 +24,6 @@ public class Category {
     private Boolean active;
 
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private Type type;
 }

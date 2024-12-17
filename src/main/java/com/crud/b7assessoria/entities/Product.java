@@ -3,7 +3,7 @@ package com.crud.b7assessoria.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "product")
+@Entity
 @Table(name = "product")
 @Getter
 @Setter
@@ -25,7 +25,8 @@ public class Product {
     @Column(name = "sku")
     private String sku;
 
-    @Column(name = "category")
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
     @Column(name = "CostValue")
