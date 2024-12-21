@@ -16,6 +16,19 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
+    public ProductDTO(Long id, String name, String active, String sku, CategoryDTO categoryDTO, String costValue, String icms, String sellingValue, String registrationDate, String quantityStock) {
+        this.id = id;
+        this.name = name;
+        this.active = active;
+        this.sku = sku;
+        this.categoryDTO = categoryDTO;
+        CostValue = costValue;
+        this.icms = icms;
+        SellingValue = sellingValue;
+        RegistrationDate = registrationDate;
+        QuantityStock = quantityStock;
+    }
+
     public Long getId() {
         return id;
     }

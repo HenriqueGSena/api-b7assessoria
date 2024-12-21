@@ -12,6 +12,13 @@ public class CategoryDTO {
     public CategoryDTO() {
     }
 
+    public CategoryDTO(Long id, String name, String active, Type type) {
+        this.id = id;
+        this.name = name;
+        this.active = active;
+        this.type = type;
+    }
+
     public Long getId() {
         return id;
     }
