@@ -28,21 +28,21 @@ public class Product {
     private String sku;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "costValue")
+    @Column(name = "cost_value")
     private Double costValue;
 
     @Column(name = "icms")
     private Double icms;
 
-    @Column(name = "SellingValue")
+    @Column(name = "selling_value")
     private Double sellingValue;
 
-    @Column(name = "RegistrationDate")
+    @Column(name = "registration_date")
     private LocalDate registrationDate;
 
-    @Column( name = "QuantityStock")
-    private String quantityStock;
+    @Column( name = "quantity_stock")
+    private Integer quantityStock;
 }

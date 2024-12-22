@@ -13,12 +13,12 @@ public class ProductDTO {
     private Double icms;
     private Double sellingValue;
     private LocalDate registrationDate;
-    private String quantityStock;
+    private Integer quantityStock;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, String active, String sku, CategoryDTO categoryDTO, Double costValue, Double icms, Double sellingValue, LocalDate registrationDate, String quantityStock) {
+    public ProductDTO(Long id, String name, String active, String sku, CategoryDTO categoryDTO, Double costValue, Double icms, Double sellingValue, LocalDate registrationDate, Integer quantityStock) {
         this.id = id;
         this.name = name;
         this.active = active;
@@ -103,11 +103,11 @@ public class ProductDTO {
         this.registrationDate = registrationDate;
     }
 
-    public String getQuantityStock() {
+    public Integer getQuantityStock() {
         return quantityStock;
     }
 
-    public void setQuantityStock(String quantityStock) {
+    public void setQuantityStock(Integer quantityStock) {
         this.quantityStock = quantityStock;
     }
 }
