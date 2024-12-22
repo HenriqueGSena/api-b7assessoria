@@ -1,5 +1,7 @@
 package com.crud.b7assessoria.dto;
 
+import java.time.LocalDate;
+
 public class ProductDTO {
 
     private Long id;
@@ -7,26 +9,26 @@ public class ProductDTO {
     private String active;
     private String sku;
     private CategoryDTO categoryDTO;
-    private String CostValue;
-    private String icms;
-    private String SellingValue;
-    private String RegistrationDate;
-    private String QuantityStock;
+    private Double costValue;
+    private Double icms;
+    private Double sellingValue;
+    private LocalDate registrationDate;
+    private String quantityStock;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, String active, String sku, CategoryDTO categoryDTO, String costValue, String icms, String sellingValue, String registrationDate, String quantityStock) {
+    public ProductDTO(Long id, String name, String active, String sku, CategoryDTO categoryDTO, Double costValue, Double icms, Double sellingValue, LocalDate registrationDate, String quantityStock) {
         this.id = id;
         this.name = name;
         this.active = active;
         this.sku = sku;
         this.categoryDTO = categoryDTO;
-        CostValue = costValue;
+        this.costValue = costValue;
         this.icms = icms;
-        SellingValue = sellingValue;
-        RegistrationDate = registrationDate;
-        QuantityStock = quantityStock;
+        this.sellingValue = sellingValue;
+        this.registrationDate = registrationDate;
+        this.quantityStock = quantityStock;
     }
 
     public Long getId() {
@@ -69,43 +71,43 @@ public class ProductDTO {
         this.categoryDTO = categoryDTO;
     }
 
-    public String getCostValue() {
-        return CostValue;
+    public Double getCostValue() {
+        return costValue;
     }
 
-    public void setCostValue(String costValue) {
-        CostValue = costValue;
+    public void setCostValue(Double costValue) {
+        this.costValue = costValue;
     }
 
-    public String getIcms() {
+    public Double getIcms() {
         return icms;
     }
 
-    public void setIcms(String icms) {
+    public void setIcms(Double icms) {
         this.icms = icms;
     }
 
-    public String getSellingValue() {
-        return SellingValue;
+    public Double getSellingValue() {
+        return sellingValue;
     }
 
-    public void setSellingValue(String sellingValue) {
-        SellingValue = sellingValue;
+    public void setSellingValue(Double sellingValue) {
+        this.sellingValue = sellingValue;
     }
 
-    public String getRegistrationDate() {
-        return RegistrationDate;
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setRegistrationDate(String registrationDate) {
-        RegistrationDate = registrationDate;
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public String getQuantityStock() {
-        return QuantityStock;
+        return quantityStock;
     }
 
     public void setQuantityStock(String quantityStock) {
-        QuantityStock = quantityStock;
+        this.quantityStock = quantityStock;
     }
 }

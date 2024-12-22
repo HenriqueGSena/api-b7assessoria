@@ -3,6 +3,8 @@ package com.crud.b7assessoria.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "product")
 @Getter
@@ -29,18 +31,18 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @Column(name = "CostValue")
-    private String CostValue;
+    @Column(name = "costValue")
+    private Double costValue;
 
     @Column(name = "icms")
-    private String icms;
+    private Double icms;
 
     @Column(name = "SellingValue")
-    private String SellingValue;
+    private Double sellingValue;
 
     @Column(name = "RegistrationDate")
-    private String RegistrationDate;
+    private LocalDate registrationDate;
 
     @Column( name = "QuantityStock")
-    private String QuantityStock;
+    private String quantityStock;
 }
