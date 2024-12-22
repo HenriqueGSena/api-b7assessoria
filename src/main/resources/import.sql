@@ -1,0 +1,10 @@
+INSERT INTO category (id, name, active, type) VALUES (1, 'Tecnologia', true, 'NORMAL');
+INSERT INTO category (id, name, active, type) VALUES(2, 'Saúde', true, 'SPECIAL');
+INSERT INTO category (id, name, active, type) VALUES(3, 'Educação', true, 'CUSTOM');
+INSERT INTO category (id, name, active, type) VALUES(4, 'Entretenimento', true, 'NORMAL');
+INSERT INTO category (id, name, active, type) VALUES(5, 'Negócios', true, 'SPECIAL');
+INSERT INTO category (id, name, active, type) VALUES(6, 'Esportes', true, 'CUSTOM');
+INSERT INTO category (id, name, active, type) VALUES(7, 'Culinária', true, 'NORMAL');
+INSERT INTO category (id, name, active, type) VALUES(8, 'Turismo', true, 'SPECIAL');
+INSERT INTO category (id, name, active, type) VALUES(9, 'Arte', true, 'CUSTOM');
+INSERT INTO category (id, name, active, type) VALUES(10, 'Música', true, 'NORMAL');
