@@ -13,5 +13,6 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+    format-sql: true
 server:
   port: 8080

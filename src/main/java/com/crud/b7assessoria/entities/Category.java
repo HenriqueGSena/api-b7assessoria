@@ -1,13 +1,14 @@
 package com.crud.b7assessoria.entities;
 
+import com.crud.b7assessoria.dto.CategoryDTO;
 import com.crud.b7assessoria.entities.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
+import java.util.List;
+
+@Entity(name = "category")
 @Table(name = "category")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -26,4 +27,36 @@ public class Category {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private Type type;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 }

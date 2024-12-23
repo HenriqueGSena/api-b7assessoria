@@ -8,7 +8,7 @@ public class ProductDTO {
     private String name;
     private String active;
     private String sku;
-    private CategoryDTO categoryDTO;
+    private Long categoryId;
     private Double costValue;
     private Double icms;
     private Double sellingValue;
@@ -18,12 +18,12 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, String active, String sku, CategoryDTO categoryDTO, Double costValue, Double icms, Double sellingValue, LocalDate registrationDate, Integer quantityStock) {
+    public ProductDTO(Long id, String name, String active, String sku, Long categoryId, Double costValue, Double icms, Double sellingValue, LocalDate registrationDate, Integer quantityStock) {
         this.id = id;
         this.name = name;
         this.active = active;
         this.sku = sku;
-        this.categoryDTO = categoryDTO;
+        this.categoryId = categoryId;
         this.costValue = costValue;
         this.icms = icms;
         this.sellingValue = sellingValue;
@@ -63,12 +63,12 @@ public class ProductDTO {
         this.sku = sku;
     }
 
-    public CategoryDTO getCategoryDTO() {
-        return categoryDTO;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryDTO(CategoryDTO categoryDTO) {
-        this.categoryDTO = categoryDTO;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Double getCostValue() {
