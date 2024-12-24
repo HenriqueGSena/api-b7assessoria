@@ -1,5 +1,7 @@
 package com.crud.b7assessoria.dto;
 
+import com.crud.b7assessoria.entities.Product;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -30,6 +32,19 @@ public class ProductDTO {
         this.sellingValue = sellingValue;
         this.registrationDate = registrationDate;
         this.quantityStock = quantityStock;
+    }
+
+    public ProductDTO(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.active = product.isActive();
+        this.sku = product.getSku();
+        this.categoryId = product.getCategory().getId();
+        this.costValue = product.getCostValue();
+        this.icms = product.getIcms();
+        this.sellingValue = product.getSellingValue();
+        this.registrationDate = product.getRegistrationDate();
+        this.quantityStock = product.getQuantityStock();
     }
 
     public Long getId() {

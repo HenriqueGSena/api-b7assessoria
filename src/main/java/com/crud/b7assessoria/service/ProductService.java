@@ -8,6 +8,9 @@ import com.crud.b7assessoria.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductService {
 
@@ -32,5 +35,12 @@ public class ProductService {
         product.setRegistrationDate(productDTO.getRegistrationDate());
         product.setQuantityStock(productDTO.getQuantityStock());
         return productRepository.save(product);
+    }
+
+    public List<ProductDTO> listAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(ProductDTO::new)
+                .collect(Collectors.toList());
     }
 }
