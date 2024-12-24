@@ -35,4 +35,10 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> list() {
         return ResponseEntity.ok(this.productService.listAllProducts());
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        ProductDTO productDTO = this.productService.getProductById(id);
+        return ResponseEntity.ok(productDTO);
+    }
 }

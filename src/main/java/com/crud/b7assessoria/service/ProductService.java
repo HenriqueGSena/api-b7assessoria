@@ -43,4 +43,10 @@ public class ProductService {
                 .map(ProductDTO::new)
                 .collect(Collectors.toList());
     }
+
+    public ProductDTO getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
+        return new ProductDTO(product);
+    }
 }
