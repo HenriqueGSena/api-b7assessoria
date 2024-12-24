@@ -7,10 +7,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
+@Entity(name="product")
 @Table(name = "product")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -29,8 +27,9 @@ public class Product {
     @Column(name = "sku")
     private String sku;
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(name = "cost_value")
     private BigDecimal costValue;
@@ -47,16 +46,83 @@ public class Product {
     @Column( name = "quantity_stock")
     private Integer quantityStock;
 
-//    public Product(ProductDTO body) {
-//        this.id = body.getId();
-//        this.name = body.getName();
-//        this.active = Boolean.parseBoolean(body.getActive());
-//        this.sku = body.getSku();
-//        this.categoryId = body.getCategoryId();
-//        this.costValue = BigDecimal.valueOf(body.getCostValue());
-//        this.icms = BigDecimal.valueOf(body.getIcms());
-//        this.sellingValue = BigDecimal.valueOf(body.getSellingValue());
-//        this.registrationDate = body.getRegistrationDate();
-//        this.quantityStock = body.getQuantityStock();
-//    }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public BigDecimal getCostValue() {
+        return costValue;
+    }
+
+    public void setCostValue(BigDecimal costValue) {
+        this.costValue = costValue;
+    }
+
+    public BigDecimal getIcms() {
+        return icms;
+    }
+
+    public void setIcms(BigDecimal icms) {
+        this.icms = icms;
+    }
+
+    public BigDecimal getSellingValue() {
+        return sellingValue;
+    }
+
+    public void setSellingValue(BigDecimal sellingValue) {
+        this.sellingValue = sellingValue;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public Integer getQuantityStock() {
+        return quantityStock;
+    }
+
+    public void setQuantityStock(Integer quantityStock) {
+        this.quantityStock = quantityStock;
+    }
 }

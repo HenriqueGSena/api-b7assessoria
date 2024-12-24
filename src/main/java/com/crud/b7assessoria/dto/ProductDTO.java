@@ -1,24 +1,25 @@
 package com.crud.b7assessoria.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ProductDTO {
 
     private Long id;
     private String name;
-    private String active;
+    private Boolean active;
     private String sku;
     private Long categoryId;
-    private Double costValue;
-    private Double icms;
-    private Double sellingValue;
+    private BigDecimal costValue;
+    private BigDecimal icms;
+    private BigDecimal sellingValue;
     private LocalDate registrationDate;
     private Integer quantityStock;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, String active, String sku, Long categoryId, Double costValue, Double icms, Double sellingValue, LocalDate registrationDate, Integer quantityStock) {
+    public ProductDTO(Long id, String name, Boolean active, String sku, Long categoryId, BigDecimal costValue, BigDecimal icms, BigDecimal sellingValue, LocalDate registrationDate, Integer quantityStock) {
         this.id = id;
         this.name = name;
         this.active = active;
@@ -47,11 +48,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public String getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(String active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -71,27 +72,27 @@ public class ProductDTO {
         this.categoryId = categoryId;
     }
 
-    public Double getCostValue() {
+    public BigDecimal getCostValue() {
         return costValue;
     }
 
-    public void setCostValue(Double costValue) {
+    public void setCostValue(BigDecimal costValue) {
         this.costValue = costValue;
     }
 
-    public Double getIcms() {
+    public BigDecimal getIcms() {
         return icms;
     }
 
-    public void setIcms(Double icms) {
+    public void setIcms(BigDecimal icms) {
         this.icms = icms;
     }
 
-    public Double getSellingValue() {
+    public BigDecimal getSellingValue() {
         return sellingValue;
     }
 
-    public void setSellingValue(Double sellingValue) {
+    public void setSellingValue(BigDecimal sellingValue) {
         this.sellingValue = sellingValue;
     }
 

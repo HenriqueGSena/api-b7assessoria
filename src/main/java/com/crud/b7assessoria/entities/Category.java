@@ -2,6 +2,7 @@ package com.crud.b7assessoria.entities;
 
 import com.crud.b7assessoria.dto.CategoryDTO;
 import com.crud.b7assessoria.entities.enums.Type;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,10 @@ public class Category {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private Type type;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Product> products;
 
     public Long getId() {
         return id;
@@ -58,5 +63,13 @@ public class Category {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }
