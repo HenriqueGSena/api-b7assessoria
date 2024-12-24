@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,4 +50,28 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
         return new ProductDTO(product);
     }
+
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isPresent()) {
+            Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
+            if (categoryOptional.isEmpty()) {
+                throw new RuntimeException("Categoria não encontrada com ID: " + productDTO.getCategoryId());
+            }
+            Product updatingProduct = product.get();
+            updatingProduct.setName(productDTO.getName());
+            updatingProduct.setActive(productDTO.getActive());
+            updatingProduct.setSku(productDTO.getSku());
+            updatingProduct.setCategory(categoryOptional.get());
+            updatingProduct.setCostValue(productDTO.getCostValue());
+            updatingProduct.setIcms(productDTO.getIcms());
+            updatingProduct.setSellingValue(productDTO.getSellingValue());
+            updatingProduct.setRegistrationDate(productDTO.getRegistrationDate());
+            updatingProduct.setQuantityStock(productDTO.getQuantityStock());
+            return new ProductDTO(productRepository.save(updatingProduct));
+        } else {
+            throw new RuntimeException("Produto não encontrado com ID: " + productId);
+        }
+    }
+
 }
