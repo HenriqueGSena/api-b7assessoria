@@ -1,3 +1,4 @@
+-- Lista de Categorias
 INSERT INTO category (id, name, active, type) VALUES (1, 'Tecnologia', true, 'NORMAL');
 INSERT INTO category (id, name, active, type) VALUES(2, 'Saúde', true, 'SPECIAL');
 INSERT INTO category (id, name, active, type) VALUES(3, 'Educação', true, 'CUSTOM');
