@@ -3,6 +3,7 @@ package com.crud.b7assessoria.service;
 import com.crud.b7assessoria.dto.ProductDTO;
 import com.crud.b7assessoria.entities.Category;
 import com.crud.b7assessoria.entities.Product;
+import com.crud.b7assessoria.exceptions.ProductNotFoundException;
 import com.crud.b7assessoria.repository.CategoryRepository;
 import com.crud.b7assessoria.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class ProductService {
 
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Produto não encontrado do ID: " + id));
         return new ProductDTO(product);
     }
 
@@ -56,7 +57,7 @@ public class ProductService {
         if (product.isPresent()) {
             Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
             if (categoryOptional.isEmpty()) {
-                throw new RuntimeException("Categoria não encontrada com ID: " + productDTO.getCategoryId());
+                throw new RuntimeException("Categoria não encontrada do ID: " + productDTO.getCategoryId());
             }
             Product updatingProduct = product.get();
             updatingProduct.setName(productDTO.getName());
