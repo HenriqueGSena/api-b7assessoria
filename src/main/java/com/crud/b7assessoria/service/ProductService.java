@@ -24,7 +24,7 @@ public class ProductService {
 
     public Product createProduct(ProductDTO productDTO) {
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new ProductNotFoundException("Categoria não encontrada"));
 
         Product product = new Product();
         product.setName(productDTO.getName());
@@ -57,7 +57,7 @@ public class ProductService {
         if (product.isPresent()) {
             Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
             if (categoryOptional.isEmpty()) {
-                throw new RuntimeException("Categoria não encontrada do ID: " + productDTO.getCategoryId());
+                throw new ProductNotFoundException("Categoria não encontrada do ID: " + productDTO.getCategoryId());
             }
             Product updatingProduct = product.get();
             updatingProduct.setName(productDTO.getName());
@@ -71,13 +71,13 @@ public class ProductService {
             updatingProduct.setQuantityStock(productDTO.getQuantityStock());
             return new ProductDTO(productRepository.save(updatingProduct));
         } else {
-            throw new RuntimeException("Produto não encontrado com ID: " + productId);
+            throw new ProductNotFoundException("Produto não encontrado do ID: " + productId);
         }
     }
 
     public void deleteProductId(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Produto não encontrado com ID: " + id));
         productRepository.delete(product);
     }
 
