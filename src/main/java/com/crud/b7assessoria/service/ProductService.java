@@ -75,6 +75,15 @@ public class ProductService {
         }
     }
 
+    public ProductDTO inactivateProduct(Long productId, ProductDTO productDTO) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Produto ja esta inativo: " + productId));
+        product.setActive(false);
+        Product savedProduct = productRepository.save(product);
+        return new ProductDTO(savedProduct);
+    }
+
+
     public void deleteProductId(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Produto não encontrado com ID: " + id));

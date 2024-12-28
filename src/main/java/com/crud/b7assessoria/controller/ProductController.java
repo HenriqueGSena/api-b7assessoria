@@ -48,6 +48,12 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
+    @PatchMapping("/inactivate/{id}")
+    public ResponseEntity inactivateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        ProductDTO inactivateProduct = this.productService.inactivateProduct(id, productDTO);
+        return ResponseEntity.ok(inactivateProduct);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProductId(id);
