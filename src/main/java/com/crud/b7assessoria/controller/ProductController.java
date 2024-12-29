@@ -34,8 +34,12 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<PageResponse<ProductDTO>> listProduct(@RequestParam(defaultValue = "0") int page) {
-        Page<ProductDTO> productPage = productService.listAllProducts(page);
+    public ResponseEntity<PageResponse<ProductDTO>> listProduct(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String sort
+    ) {
+        Page<ProductDTO> productPage = productService.listAllProducts(page, size, sort);
         String prevPage = "/product/list?page=" + (productPage.hasPrevious() ? page - 1 : page);
         String nextPage = "/product/list?page=" + (productPage.hasNext() ? page + 1 : page);
         PageResponse<ProductDTO> response = new PageResponse<>(

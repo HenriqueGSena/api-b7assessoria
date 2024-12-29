@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,11 +44,26 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Page<ProductDTO> listAllProducts(int page) {
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+    public Page<ProductDTO> listAllProducts(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(ProductDTO::new);
+    }
+
+    private List<Sort.Order> getSortOrders(String sort) {
+        if (sort == null || sort.isEmpty()) {
+            return List.of(Sort.Order.asc("id"));
+        }
+
+        String[] sortParams = sort.split(";");
+        return Arrays.stream(sortParams)
+                .map(param -> {
+                    String[] fieldAndDirection = param.split(",");
+                    String field = fieldAndDirection[0];
+                    String direction = fieldAndDirection.length > 1 ? fieldAndDirection[1] : "asc";
+                    return "desc".equalsIgnoreCase(direction) ? Sort.Order.desc(field) : Sort.Order.asc(field);
+                })
+                .toList();
     }
 
     public ProductDTO getProductById(Long id) {
