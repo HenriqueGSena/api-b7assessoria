@@ -1,10 +1,12 @@
 package com.crud.b7assessoria.controller;
 
 import com.crud.b7assessoria.dto.ProductDTO;
+import com.crud.b7assessoria.entities.PageResponse;
 import com.crud.b7assessoria.entities.Product;
 import com.crud.b7assessoria.repository.ProductRepository;
 import com.crud.b7assessoria.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +34,18 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProductDTO>> list() {
-        return ResponseEntity.ok(this.productService.listAllProducts());
+    public ResponseEntity<PageResponse<ProductDTO>> listProduct(@RequestParam(defaultValue = "0") int page) {
+        Page<ProductDTO> productPage = productService.listAllProducts(page);
+        String prevPage = "/product/list?page=" + (productPage.hasPrevious() ? page - 1 : page);
+        String nextPage = "/product/list?page=" + (productPage.hasNext() ? page + 1 : page);
+        PageResponse<ProductDTO> response = new PageResponse<>(
+                productPage.getContent(),
+                productPage.getNumber(),
+                productPage.getTotalPages(),
+                prevPage,
+                nextPage
+        );
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

@@ -7,6 +7,10 @@ import com.crud.b7assessoria.exceptions.ProductNotFoundException;
 import com.crud.b7assessoria.repository.CategoryRepository;
 import com.crud.b7assessoria.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,11 +43,11 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public List<ProductDTO> listAllProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(ProductDTO::new)
-                .collect(Collectors.toList());
+    public Page<ProductDTO> listAllProducts(int page) {
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage.map(ProductDTO::new);
     }
 
     public ProductDTO getProductById(Long id) {
