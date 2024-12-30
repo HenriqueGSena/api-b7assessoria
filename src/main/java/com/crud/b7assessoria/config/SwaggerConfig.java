@@ -20,7 +20,7 @@ public class SwaggerConfig {
 
         Contact contact = new Contact();
         contact.setName("Henrique Sena");
-        contact.setUrl("https://henriquegsena.github.io/");
+        contact.setUrl("https://github.com/HenriqueGSena");
 
         Info info = new Info()
                 .title("Api B7 Assessoria")
