@@ -46,6 +46,10 @@ public class Product {
     @Column( name = "quantity_stock")
     private Integer quantityStock;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+
     public Long getId() {
         return id;
     }
@@ -124,5 +128,13 @@ public class Product {
 
     public void setQuantityStock(Integer quantityStock) {
         this.quantityStock = quantityStock;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 }

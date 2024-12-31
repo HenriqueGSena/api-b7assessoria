@@ -54,7 +54,6 @@ public class ProductService {
         if (sort == null || sort.isEmpty()) {
             return List.of(Sort.Order.asc("id"));
         }
-
         String[] sortParams = sort.split(";");
         return Arrays.stream(sortParams)
                 .map(param -> {
@@ -64,6 +63,10 @@ public class ProductService {
                     return "desc".equalsIgnoreCase(direction) ? Sort.Order.desc(field) : Sort.Order.asc(field);
                 })
                 .toList();
+    }
+
+    public List<Product> findProductsByUserId(Long userId) {
+        return productRepository.findByUserId(userId);
     }
 
     public ProductDTO getProductById(Long id) {

@@ -1,7 +1,10 @@
 package com.crud.b7assessoria.entities;
 
+import com.crud.b7assessoria.entities.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,4 +24,11 @@ public class Users {
 
     @Column(name = "password")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
 }
