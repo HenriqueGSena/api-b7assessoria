@@ -44,15 +44,6 @@ public class UsersController {
         return ResponseEntity.ok(new LoginDTO(token));
     }
 
-//    @PostMapping("/register")
-//    public ResponseEntity register(@RequestBody @Valid RegisterDTO registerDTO) {
-//        if (this.usersRepository.findByName(registerDTO.name()) != null) return ResponseEntity.badRequest().build();
-//        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
-//        Users user = new Users(registerDTO.name(), encryptedPassword, registerDTO.role());
-//        this.usersRepository.save(user);
-//        return ResponseEntity.ok().build();
-//    }
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO registerDTO) {
         if (this.usersRepository.findByName(registerDTO.name()).isPresent()) {
