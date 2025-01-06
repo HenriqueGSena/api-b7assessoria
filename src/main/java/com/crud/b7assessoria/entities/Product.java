@@ -9,6 +9,8 @@ import java.time.LocalDate;
 
 @Entity(name="product")
 @Table(name = "product")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -50,91 +52,4 @@ public class Product {
     @JoinColumn(name = "user_id")
     private Users user;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public BigDecimal getCostValue() {
-        return costValue;
-    }
-
-    public void setCostValue(BigDecimal costValue) {
-        this.costValue = costValue;
-    }
-
-    public BigDecimal getIcms() {
-        return icms;
-    }
-
-    public void setIcms(BigDecimal icms) {
-        this.icms = icms;
-    }
-
-    public BigDecimal getSellingValue() {
-        return sellingValue;
-    }
-
-    public void setSellingValue(BigDecimal sellingValue) {
-        this.sellingValue = sellingValue;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public Integer getQuantityStock() {
-        return quantityStock;
-    }
-
-    public void setQuantityStock(Integer quantityStock) {
-        this.quantityStock = quantityStock;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
 }

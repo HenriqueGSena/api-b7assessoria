@@ -25,7 +25,7 @@ public class SecurityConfig {
     SecurityFilter securityFilter;
 
     private static final String[] SWAGGER_WHITELIST = {
-            "/v3/api-docs/**",
+            "/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/swagger-resources/**",
@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/category/list").hasAnyRole("ADMIN", "STOCKIST")
                         .requestMatchers(HttpMethod.POST, "/product/create").hasAnyRole("ADMIN", "STOCKIST")
                         .requestMatchers(HttpMethod.GET, "product/list").hasAnyRole("ADMIN", "STOCKIST")

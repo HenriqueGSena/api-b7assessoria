@@ -3,9 +3,11 @@ package com.crud.b7assessoria.service;
 import com.crud.b7assessoria.dto.ProductDTO;
 import com.crud.b7assessoria.entities.Category;
 import com.crud.b7assessoria.entities.Product;
+import com.crud.b7assessoria.entities.Users;
 import com.crud.b7assessoria.exceptions.ProductNotFoundException;
 import com.crud.b7assessoria.repository.CategoryRepository;
 import com.crud.b7assessoria.repository.ProductRepository;
+import com.crud.b7assessoria.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,10 +29,14 @@ public class ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Product createProduct(ProductDTO productDTO) {
+    @Autowired
+    private UsersRepository usersRepository;
+
+    public Product createProduct(ProductDTO productDTO, String name) {
+        Users user = usersRepository.findByName(name)
+                .orElseThrow(() -> new ProductNotFoundException("Usuário não encontrado"));
         Category category = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() -> new ProductNotFoundException("Categoria não encontrada"));
-
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setActive(productDTO.getActive());
@@ -41,6 +47,7 @@ public class ProductService {
         product.setSellingValue(productDTO.getSellingValue());
         product.setRegistrationDate(productDTO.getRegistrationDate());
         product.setQuantityStock(productDTO.getQuantityStock());
+        product.setUser(user);
         return productRepository.save(product);
     }
 

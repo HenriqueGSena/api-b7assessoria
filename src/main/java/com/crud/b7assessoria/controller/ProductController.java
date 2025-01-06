@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -24,9 +25,10 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/create")
-    public ResponseEntity<Product> create(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<Product> create(@RequestBody ProductDTO productDTO, Principal principal) {
         try {
-            Product createProduct = productService.createProduct(productDTO);
+            String username = principal.getName();
+            Product createProduct = productService.createProduct(productDTO, username);
             return ResponseEntity.status(HttpStatus.CREATED).body(createProduct);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

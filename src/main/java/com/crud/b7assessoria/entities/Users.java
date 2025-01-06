@@ -33,7 +33,7 @@ public class Users implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Product> products;
 
     public Users(String name, String password, Role role) {
