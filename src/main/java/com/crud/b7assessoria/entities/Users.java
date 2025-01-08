@@ -1,6 +1,7 @@
 package com.crud.b7assessoria.entities;
 
 import com.crud.b7assessoria.entities.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,7 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "users")
 @Table(name = "users")
@@ -33,8 +36,9 @@ public class Users implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Product> products;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Product> products = new HashSet<>();
 
     public Users(String name, String password, Role role) {
         this.name = name;

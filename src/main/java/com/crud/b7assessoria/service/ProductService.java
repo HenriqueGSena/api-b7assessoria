@@ -24,13 +24,19 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UsersRepository usersRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.usersRepository = usersRepository;
+    }
 
     public Product createProduct(ProductDTO productDTO, String name) {
         Users user = usersRepository.findByName(name)

@@ -19,10 +19,11 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    private ProductRepository productRepository;
+    private final ProductService productService;
 
-    @Autowired
-    private ProductService productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Product> create(@RequestBody ProductDTO productDTO, Principal principal) {
@@ -54,7 +55,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/productUser/{userId}")
     public List<Product> findProductByUserId(@PathVariable Long userId) {
         return productService.findProductsByUserId(userId);
     }

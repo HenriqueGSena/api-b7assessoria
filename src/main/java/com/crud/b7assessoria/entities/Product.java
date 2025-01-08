@@ -7,7 +7,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity(name="product")
+@Entity
 @Table(name = "product")
 @Getter
 @Setter
