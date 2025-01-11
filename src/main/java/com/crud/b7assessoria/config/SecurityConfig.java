@@ -43,8 +43,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").hasAnyRole("ADMIN", "STOCKIST")
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/category/list").hasAnyRole("ADMIN", "STOCKIST")
                         .requestMatchers(HttpMethod.POST, "/product/create").hasAnyRole("ADMIN", "STOCKIST")
                         .requestMatchers(HttpMethod.GET, "product/list").hasAnyRole("ADMIN", "STOCKIST")

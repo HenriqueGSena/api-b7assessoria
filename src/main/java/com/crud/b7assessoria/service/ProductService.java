@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +25,10 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    @Autowired
     private final ProductRepository productRepository;
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
-    @Autowired
     private final UsersRepository usersRepository;
 
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UsersRepository usersRepository) {
@@ -57,9 +56,16 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Page<ProductDTO> listAllProducts(int page, int size, String sort) {
+    public Page<ProductDTO> listAllProducts(int page, int size, String sort,
+                                            String name, Boolean active, String sku,
+                                            Long categoryId, BigDecimal costValue, BigDecimal icms,
+                                            BigDecimal sellingValue, LocalDate registrationDate, Integer quantityStock, Long userId)
+    {
         Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
-        Page<Product> productPage = productRepository.findAll(pageable);
+        Category category = categoryId != null ? categoryRepository.findById(categoryId).orElse(null) : null;
+        Users user = userId != null ? usersRepository.findById(userId).orElse(null) : null;
+        Page<Product> productPage = productRepository.findByFilter(name, active, sku, category, costValue,
+                icms, sellingValue, registrationDate, quantityStock, user, pageable);
         return productPage.map(ProductDTO::new);
     }
 
