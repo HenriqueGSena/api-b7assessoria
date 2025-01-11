@@ -1,34 +1,50 @@
 package com.crud.b7assessoria.dto;
 
+import com.crud.b7assessoria.entities.Product;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ProductDTO {
 
     private Long id;
     private String name;
-    private String active;
+    private Boolean active;
     private String sku;
-    private CategoryDTO categoryDTO;
-    private Double costValue;
-    private Double icms;
-    private Double sellingValue;
+    private Long categoryId;
+    private BigDecimal costValue;
+    private BigDecimal icms;
+    private BigDecimal sellingValue;
     private LocalDate registrationDate;
     private Integer quantityStock;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, String active, String sku, CategoryDTO categoryDTO, Double costValue, Double icms, Double sellingValue, LocalDate registrationDate, Integer quantityStock) {
+    public ProductDTO(Long id, String name, Boolean active, String sku, Long categoryId, BigDecimal costValue, BigDecimal icms, BigDecimal sellingValue, LocalDate registrationDate, Integer quantityStock) {
         this.id = id;
         this.name = name;
         this.active = active;
         this.sku = sku;
-        this.categoryDTO = categoryDTO;
+        this.categoryId = categoryId;
         this.costValue = costValue;
         this.icms = icms;
         this.sellingValue = sellingValue;
         this.registrationDate = registrationDate;
         this.quantityStock = quantityStock;
+    }
+
+    public ProductDTO(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.active = product.isActive();
+        this.sku = product.getSku();
+        this.categoryId = product.getCategory().getId();
+        this.costValue = product.getCostValue();
+        this.icms = product.getIcms();
+        this.sellingValue = product.getSellingValue();
+        this.registrationDate = product.getRegistrationDate();
+        this.quantityStock = product.getQuantityStock();
     }
 
     public Long getId() {
@@ -47,11 +63,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public String getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(String active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -63,35 +79,35 @@ public class ProductDTO {
         this.sku = sku;
     }
 
-    public CategoryDTO getCategoryDTO() {
-        return categoryDTO;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryDTO(CategoryDTO categoryDTO) {
-        this.categoryDTO = categoryDTO;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Double getCostValue() {
+    public BigDecimal getCostValue() {
         return costValue;
     }
 
-    public void setCostValue(Double costValue) {
+    public void setCostValue(BigDecimal costValue) {
         this.costValue = costValue;
     }
 
-    public Double getIcms() {
+    public BigDecimal getIcms() {
         return icms;
     }
 
-    public void setIcms(Double icms) {
+    public void setIcms(BigDecimal icms) {
         this.icms = icms;
     }
 
-    public Double getSellingValue() {
+    public BigDecimal getSellingValue() {
         return sellingValue;
     }
 
-    public void setSellingValue(Double sellingValue) {
+    public void setSellingValue(BigDecimal sellingValue) {
         this.sellingValue = sellingValue;
     }
 

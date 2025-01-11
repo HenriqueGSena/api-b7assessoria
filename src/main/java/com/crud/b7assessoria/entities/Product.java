@@ -1,8 +1,10 @@
 package com.crud.b7assessoria.entities;
 
+import com.crud.b7assessoria.dto.ProductDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -28,21 +30,26 @@ public class Product {
     private String sku;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Column(name = "cost_value")
-    private Double costValue;
+    private BigDecimal costValue;
 
     @Column(name = "icms")
-    private Double icms;
+    private BigDecimal icms;
 
     @Column(name = "selling_value")
-    private Double sellingValue;
+    private BigDecimal sellingValue;
 
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
     @Column( name = "quantity_stock")
     private Integer quantityStock;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+
 }
