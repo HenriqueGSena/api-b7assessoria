@@ -94,17 +94,25 @@ public class ProductService {
 
     public List<ProductReportDTO> getListProductReports() {
         List<Product> products = productRepository.findAll();
-        return products.stream()
-               .map(product -> new ProductReportDTO(
-                       product.getId(),
-                       product.getName(),
-                       product.getCostValue(),
-                       product.getSellingValue(),
-                       product.getQuantityStock(),
-                       product.getCostValue().multiply(BigDecimal.valueOf(product.getQuantityStock())),
-                       product.getSellingValue().multiply(BigDecimal.valueOf(product.getQuantityStock()))
-                ))
-               .collect(Collectors.toList());
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        return products.stream().map(product -> {
+            BigDecimal costTotal = product.getCostValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
+            BigDecimal sellingTotal = product.getSellingValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
+
+            String formattedCostTotal = numberFormat.format(costTotal);
+            String formattedSellingTotal = numberFormat.format(sellingTotal);
+            String formattedCostValue = numberFormat.format(product.getCostValue());
+            String formattedSellingValue = numberFormat.format(product.getSellingValue());
+            return new ProductReportDTO(
+                    product.getId(),
+                    product.getName(),
+                    formattedCostValue,
+                    formattedSellingValue,
+                    product.getQuantityStock(),
+                    formattedCostTotal,
+                    formattedSellingTotal
+            );
+        }).collect(Collectors.toList());
     }
 
     public ProductDTO getProductById(Long id) {

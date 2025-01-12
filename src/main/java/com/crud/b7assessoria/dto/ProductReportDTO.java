@@ -6,16 +6,16 @@ public class ProductReportDTO {
 
     private Long id;
     private String name;
-    private BigDecimal costValue;
-    private BigDecimal sellingValue;
+    private String costValue;
+    private String sellingValue;
     private Integer quantityStock;
-    private BigDecimal costTotal;
-    private BigDecimal sellingTotal;
+    private String costTotal;
+    private String sellingTotal;
 
     public ProductReportDTO() {
     }
 
-    public ProductReportDTO(Long id, String name, BigDecimal costValue, BigDecimal sellingValue, Integer quantityStock, BigDecimal costTotal, BigDecimal sellingTotal) {
+    public ProductReportDTO(Long id, String name, String costValue, String sellingValue, Integer quantityStock, String costTotal, String sellingTotal) {
         this.id = id;
         this.name = name;
         this.costValue = costValue;
@@ -41,19 +41,19 @@ public class ProductReportDTO {
         this.name = name;
     }
 
-    public BigDecimal getCostValue() {
+    public String getCostValue() {
         return costValue;
     }
 
-    public void setCostValue(BigDecimal costValue) {
+    public void setCostValue(String costValue) {
         this.costValue = costValue;
     }
 
-    public BigDecimal getSellingValue() {
+    public String getSellingValue() {
         return sellingValue;
     }
 
-    public void setSellingValue(BigDecimal sellingValue) {
+    public void setSellingValue(String sellingValue) {
         this.sellingValue = sellingValue;
     }
 
@@ -65,19 +65,19 @@ public class ProductReportDTO {
         this.quantityStock = quantityStock;
     }
 
-    public BigDecimal getCostTotal() {
+    public String getCostTotal() {
         return costTotal;
     }
 
-    public void setCostTotal(BigDecimal costTotal) {
+    public void setCostTotal(String costTotal) {
         this.costTotal = costTotal;
     }
 
-    public BigDecimal getSellingTotal() {
+    public String getSellingTotal() {
         return sellingTotal;
     }
 
-    public void setSellingTotal(BigDecimal sellingTotal) {
+    public void setSellingTotal(String sellingTotal) {
         this.sellingTotal = sellingTotal;
     }
 }
