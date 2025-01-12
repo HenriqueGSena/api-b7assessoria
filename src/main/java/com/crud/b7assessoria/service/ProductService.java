@@ -10,10 +10,7 @@ import com.crud.b7assessoria.repository.CategoryRepository;
 import com.crud.b7assessoria.repository.ProductRepository;
 import com.crud.b7assessoria.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -92,10 +89,12 @@ public class ProductService {
         return productRepository.findByUserId(userId);
     }
 
-    public List<ProductReportDTO> getListProductReports() {
-        List<Product> products = productRepository.findAll();
+    public Page<ProductReportDTO> getListProductReports(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
+        Page<Product> products = productRepository.findAll(pageable);
+
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-        return products.stream().map(product -> {
+        List<ProductReportDTO> productReportDTOS = products.getContent().stream().map(product -> {
             BigDecimal costTotal = product.getCostValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
             BigDecimal sellingTotal = product.getSellingValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
 
@@ -113,6 +112,7 @@ public class ProductService {
                     formattedSellingTotal
             );
         }).collect(Collectors.toList());
+        return new PageImpl<>(productReportDTOS, pageable, products.getTotalElements());
     }
 
     public ProductDTO getProductById(Long id) {

@@ -19,7 +19,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-//    Page<Product> findAll(Pageable pageable);
 
     @Query(value = "SELECT * FROM product WHERE user_id = :userId", nativeQuery = true)
     List<Product> findByUserId(@Param("userId") Long userId);
