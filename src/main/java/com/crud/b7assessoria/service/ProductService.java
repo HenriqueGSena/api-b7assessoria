@@ -1,6 +1,7 @@
 package com.crud.b7assessoria.service;
 
 import com.crud.b7assessoria.dto.ProductDTO;
+import com.crud.b7assessoria.dto.ProductReportDTO;
 import com.crud.b7assessoria.entities.Category;
 import com.crud.b7assessoria.entities.Product;
 import com.crud.b7assessoria.entities.Users;
@@ -16,9 +17,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -86,6 +90,21 @@ public class ProductService {
 
     public List<Product> findProductsByUserId(Long userId) {
         return productRepository.findByUserId(userId);
+    }
+
+    public List<ProductReportDTO> getListProductReports() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+               .map(product -> new ProductReportDTO(
+                       product.getId(),
+                       product.getName(),
+                       product.getCostValue(),
+                       product.getSellingValue(),
+                       product.getQuantityStock(),
+                       product.getCostValue().multiply(BigDecimal.valueOf(product.getQuantityStock())),
+                       product.getSellingValue().multiply(BigDecimal.valueOf(product.getQuantityStock()))
+                ))
+               .collect(Collectors.toList());
     }
 
     public ProductDTO getProductById(Long id) {

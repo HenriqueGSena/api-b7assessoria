@@ -1,6 +1,7 @@
 package com.crud.b7assessoria.controller;
 
 import com.crud.b7assessoria.dto.ProductDTO;
+import com.crud.b7assessoria.dto.ProductReportDTO;
 import com.crud.b7assessoria.entities.Category;
 import com.crud.b7assessoria.entities.PageResponse;
 import com.crud.b7assessoria.entities.Product;
@@ -85,6 +86,11 @@ public class ProductController {
     @GetMapping("/productUser/{userId}")
     public List<Product> findProductByUserId(@PathVariable Long userId) {
         return productService.findProductsByUserId(userId);
+    }
+
+    @GetMapping("/reports")
+    public ResponseEntity<List<ProductReportDTO>> getProductReports() {
+        return ResponseEntity.ok(this.productService.getListProductReports());
     }
 
     @GetMapping("/{id}")
