@@ -7,6 +7,7 @@ import com.crud.b7assessoria.entities.Product;
 import com.crud.b7assessoria.entities.Users;
 import com.crud.b7assessoria.exceptions.ProductNotFoundException;
 import com.crud.b7assessoria.repository.CategoryRepository;
+import com.crud.b7assessoria.repository.ProductReportRepository;
 import com.crud.b7assessoria.repository.ProductRepository;
 import com.crud.b7assessoria.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,15 @@ public class ProductService {
 
     private final UsersRepository usersRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UsersRepository usersRepository) {
+    private final ProductReportRepository productReportRepository;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UsersRepository usersRepository, ProductReportRepository productReportRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.usersRepository = usersRepository;
+        this.productReportRepository = productReportRepository;
     }
+
 
     public Product createProduct(ProductDTO productDTO, String name) {
         Users user = usersRepository.findByName(name)
@@ -89,17 +94,19 @@ public class ProductService {
         return productRepository.findByUserId(userId);
     }
 
-    public Page<ProductReportDTO> getListProductReports(int page, int size, String sort) {
+    public Page<ProductReportDTO> getListProductReports(int page, int size, String sort, String name, String costValue,
+                                                        String sellingValue, Integer quantityStock, String costTotal, String sellingTotal, Long userId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
-        Page<Product> products = productRepository.findAll(pageable);
+        Users user = userId != null ? usersRepository.findById(userId).orElse(null) : null;
+        Page<Product> products = productReportRepository.findByFilterReport(name, costValue, sellingValue, quantityStock, costTotal, sellingTotal, user, pageable);
 
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
         List<ProductReportDTO> productReportDTOS = products.getContent().stream().map(product -> {
-            BigDecimal costTotal = product.getCostValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
-            BigDecimal sellingTotal = product.getSellingValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
+            BigDecimal costValueTotal = product.getCostValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
+            BigDecimal sellingValueTotal = product.getSellingValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
 
-            String formattedCostTotal = numberFormat.format(costTotal);
-            String formattedSellingTotal = numberFormat.format(sellingTotal);
+            String formattedCostTotal = numberFormat.format(costValueTotal);
+            String formattedSellingTotal = numberFormat.format(sellingValueTotal);
             String formattedCostValue = numberFormat.format(product.getCostValue());
             String formattedSellingValue = numberFormat.format(product.getSellingValue());
             return new ProductReportDTO(

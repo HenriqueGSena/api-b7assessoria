@@ -92,9 +92,18 @@ public class ProductController {
     public ResponseEntity<PageResponse<ProductReportDTO>> getProductReports(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String sort
+            @RequestParam(defaultValue = "id,asc") String sort,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String costValue,
+            @RequestParam(required = false) String sellingValue,
+            @RequestParam(required = false) Integer quantityStock,
+            @RequestParam(required = false) String costTotal,
+            @RequestParam(required = false) String sellingTotal,
+            @RequestParam(required = false) Long userId
     ) {
-        Page<ProductReportDTO> productReportDTOS = productService.getListProductReports(page, size, sort);
+        Page<ProductReportDTO> productReportDTOS = productService.getListProductReports(page, size, sort, name, costValue, sellingValue,
+                quantityStock, costTotal, sellingTotal, userId
+        );
         String prevPage = "/product/list?page=" + (productReportDTOS.hasPrevious() ? page - 1 : page);
         String nextPage = "/product/list?page=" + (productReportDTOS.hasNext() ? page + 1 : page);
         PageResponse<ProductReportDTO> response = new PageResponse<>(
