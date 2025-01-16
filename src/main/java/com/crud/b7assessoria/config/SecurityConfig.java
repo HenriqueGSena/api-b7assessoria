@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "product/update/{productId}").hasAnyRole("ADMIN", "STOCKIST")
                         .requestMatchers(HttpMethod.PATCH, "product/inactivate/{id}").hasAnyRole("ADMIN", "STOCKIST")
                         .requestMatchers(HttpMethod.DELETE, "product/delete/{id}").hasAnyRole("ADMIN", "STOCKIST")
+                        .requestMatchers(HttpMethod.GET, "/field/download").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

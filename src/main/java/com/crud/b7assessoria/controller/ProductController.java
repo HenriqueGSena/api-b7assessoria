@@ -28,14 +28,19 @@ public class ProductController {
 
     @Autowired
     private final ProductService productService;
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private CategoryRepository categoryRepository;
 
-    public ProductController(ProductService productService) {
+    @Autowired
+    private final CategoryService categoryService;
+
+    @Autowired
+    private final CategoryRepository categoryRepository;
+
+    public ProductController(ProductService productService, CategoryService categoryService, CategoryRepository categoryRepository) {
         this.productService = productService;
+        this.categoryService = categoryService;
+        this.categoryRepository = categoryRepository;
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<Product> create(@RequestBody ProductDTO productDTO, Principal principal) {
@@ -140,4 +145,5 @@ public class ProductController {
         return ResponseEntity.noContent().build();
 
     }
+
 }
