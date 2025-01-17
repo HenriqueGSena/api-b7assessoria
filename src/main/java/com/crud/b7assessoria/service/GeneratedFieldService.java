@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 @Service
@@ -19,7 +20,17 @@ public class GeneratedFieldService {
         this.productRepository = productRepository;
     }
 
-    public byte[] generateField() throws IOException {
+    public byte[] generateFile(String format) throws IOException {
+        if ("csv".equalsIgnoreCase(format)) {
+            return generateFieldCsv();
+        } else if ("xlsx".equalsIgnoreCase(format)) {
+            return generateFieldXlsx();
+        } else {
+            throw new IllegalArgumentException("Formato inválido: " + format);
+        }
+    }
+
+    private byte[] generateFieldXlsx() throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Product");
 
@@ -56,6 +67,29 @@ public class GeneratedFieldService {
 
             workbook.write(out);
             return out.toByteArray();
+        }
+    }
+
+    private byte[] generateFieldCsv() throws IOException {
+        List<Product> products = productRepository.findAll();
+
+        try (StringWriter writer = new StringWriter()) {
+            writer.append("Id, Name, Active, Sku, Category_Id, Cost_Value, Icms, Selling_Value, Registration, Quantity_Stock\n");
+            for (Product product: products) {
+                writer.append(String.format("%d,%s,%b,%s,%d,%.2f,%.2f,%.2f,%s,%d\n",
+                        product.getId(),
+                        product.getName(),
+                        product.isActive(),
+                        product.getSku(),
+                        product.getCategory().getId(),
+                        product.getCostValue().doubleValue(),
+                        product.getIcms().doubleValue(),
+                        product.getSellingValue().doubleValue(),
+                        product.getRegistrationDate().toString(),
+                        product.getQuantityStock()
+                ));
+            }
+            return writer.toString().getBytes();
         }
     }
 }
