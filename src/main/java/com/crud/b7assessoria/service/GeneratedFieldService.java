@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,36 +26,41 @@ public class GeneratedFieldService {
         this.productRepository = productRepository;
     }
 
-    private static final Map<String, Function<Product, Object>> FIELD_MAPPERS = Map.of(
-            "Id", Product::getId,
-            "Name", Product::getName,
-            "Active", Product::isActive,
-            "Sku", Product::getSku,
-            "Category_Id", product -> product.getCategory() != null ? product.getCategory().getId() : null,
-            "Cost_Value", product -> product.getCostValue() != null ? product.getCostValue().doubleValue() : null,
-            "Icms", product -> product.getIcms() != null ? product.getIcms().doubleValue() : null,
-            "Selling_Value", product -> product.getSellingValue() != null ? product.getSellingValue().doubleValue() : null,
-            "Registration", product -> product.getRegistrationDate() != null ? product.getRegistrationDate().toString() : null,
-            "Quantity_Stock", Product::getQuantityStock
-    );
+    private static final Map<String, Function<Product, Object>> FIELD_MAPPERS = new HashMap<>();
 
-    public byte[] generateFile(String format, List<String> fields) throws IOException {
+    static {
+        FIELD_MAPPERS.put("Id", Product::getId);
+        FIELD_MAPPERS.put("Name", Product::getName);
+        FIELD_MAPPERS.put("Active", Product::isActive);
+        FIELD_MAPPERS.put("Sku", Product::getSku);
+        FIELD_MAPPERS.put("Category_Id", product -> product.getCategory() != null ? product.getCategory().getId() : null);
+        FIELD_MAPPERS.put("Cost_Value", product -> product.getCostValue() != null ? product.getCostValue().doubleValue() : null);
+        FIELD_MAPPERS.put("Icms", product -> product.getIcms() != null ? product.getIcms().doubleValue() : null);
+        FIELD_MAPPERS.put("Selling_Value", product -> product.getSellingValue() != null ? product.getSellingValue().doubleValue() : null);
+        FIELD_MAPPERS.put("Registration", product -> product.getRegistrationDate() != null ? product.getRegistrationDate().toString() : null);
+        FIELD_MAPPERS.put("Quantity_Stock", Product::getQuantityStock);
+        FIELD_MAPPERS.put("User_Id", product -> product.getUser() != null ? product.getUser().getId() : null);
+        FIELD_MAPPERS.put("User_Name", product -> product.getUser() != null ? product.getUser().getName() : null);
+    }
+
+
+    public byte[] generateFile(String format, List<String> fields, Long userId) throws IOException {
         List<String> validFields = validateField(fields);
+        List<Product> products = productRepository.findByUserId(userId);
 
         if ("csv".equalsIgnoreCase(format)) {
-            return generateFieldCsv(validFields);
+            return generateFieldCsv(validFields, products);
         } else if ("xlsx".equalsIgnoreCase(format)) {
-            return generateFieldXlsx(validFields);
+            return generateFieldXlsx(validFields, products);
         } else {
             throw new IllegalArgumentException("Formato inválido: " + format);
         }
     }
 
-    private byte[] generateFieldXlsx(List<String> fields) throws IOException {
+    private byte[] generateFieldXlsx(List<String> fields, List<Product> products) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Product");
 
-            // Cabeçalhos
             Row headerRow = sheet.createRow(0);
             for (int i = 0; i < fields.size(); i++) {
                 Cell cell = headerRow.createCell(i);
@@ -66,8 +72,6 @@ public class GeneratedFieldService {
                 cell.setCellStyle(style);
             }
 
-            // Dados
-            List<Product> products = productRepository.findAll();
             int rowIndex = 1;
             for (Product product : products) {
                 Row row = sheet.createRow(rowIndex++);
@@ -88,11 +92,8 @@ public class GeneratedFieldService {
         }
     }
 
-    private byte[] generateFieldCsv(List<String> fields) throws IOException {
-        List<Product> products = productRepository.findAll();
-
+    private byte[] generateFieldCsv(List<String> fields, List<Product> products) throws IOException {
         try (StringWriter writer = new StringWriter()) {
-            // Cabeçalhos
             writer.append(String.join(",", fields)).append("\n");
 
             // Dados

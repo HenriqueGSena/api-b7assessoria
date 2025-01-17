@@ -28,9 +28,11 @@ public class GeneratedFieldController {
     @GetMapping("/download")
     public ResponseEntity<byte[]> generateField(
             @RequestParam(defaultValue = "xlsx or csv") String format,
-            @RequestParam List<String> fields) throws IOException {
+            @RequestParam(required = false) List<String> fields,
+            @RequestParam(required = false) Long userId
+    ) throws IOException {
 
-        byte[] fileData = generatedFieldService.generateFile(format, fields);
+        byte[] fileData = generatedFieldService.generateFile(format, fields, userId);
         String fileName = "products." + format;
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
@@ -39,29 +41,5 @@ public class GeneratedFieldController {
                 ? "text/csv"
                 :"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
-
-
-//        try {
-//            byte[] fileContent = generatedFieldService.generateFile(format);
-//
-//            HttpHeaders headers = new HttpHeaders();
-//            if ("csv".equalsIgnoreCase(format)) {
-//                headers.setContentType(MediaType.TEXT_PLAIN);
-//                headers.setContentDispositionFormData("attachment", "products.csv");
-//            } else if ("xlsx".equalsIgnoreCase(format)) {
-//                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//                headers.setContentDispositionFormData("attachment", "products.xlsx");
-//            } else {
-//                return ResponseEntity.badRequest().body(null);
-//            }
-//
-//            return ResponseEntity.ok()
-//                    .headers(headers)
-//                    .body(fileContent);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage().getBytes());
-//        } catch (IOException e) {
-//            return ResponseEntity.internalServerError().build();
-//        }
     }
 }
