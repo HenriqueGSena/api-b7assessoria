@@ -1,6 +1,7 @@
 package com.crud.b7assessoria.controller;
 
 import com.crud.b7assessoria.dto.ProductDTO;
+import com.crud.b7assessoria.dto.ProductReportDTO;
 import com.crud.b7assessoria.entities.Category;
 import com.crud.b7assessoria.entities.PageResponse;
 import com.crud.b7assessoria.entities.Product;
@@ -27,14 +28,19 @@ public class ProductController {
 
     @Autowired
     private final ProductService productService;
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private CategoryRepository categoryRepository;
 
-    public ProductController(ProductService productService) {
+    @Autowired
+    private final CategoryService categoryService;
+
+    @Autowired
+    private final CategoryRepository categoryRepository;
+
+    public ProductController(ProductService productService, CategoryService categoryService, CategoryRepository categoryRepository) {
         this.productService = productService;
+        this.categoryService = categoryService;
+        this.categoryRepository = categoryRepository;
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<Product> create(@RequestBody ProductDTO productDTO, Principal principal) {
@@ -67,7 +73,7 @@ public class ProductController {
                 categoryId, costValue, icms, sellingValue, registrationDate, quantityStock, userId
         );
         String baseUrl = "/product/list?";
-        String queryParams = String.format("page=%d&size=%d&sort=%s&name=%s&active=%s&sku=%s&categoryId=%s&costValue=%s&icms=%s&sellingValue=%s&registrationDate=%s&quantityStock=%s&userId=%s",
+        String queryParams = String.format("",
                 page, size, sort, name, active, sku, categoryId, costValue, icms, sellingValue, registrationDate, quantityStock, userId);
 
         String prevPage = productPage.hasPrevious() ? baseUrl + queryParams.replace("page=" + page, "page=" + (page - 1)) : null;
@@ -82,9 +88,37 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/productUser/{userId}")
+    @GetMapping("/{userId}")
     public List<Product> findProductByUserId(@PathVariable Long userId) {
         return productService.findProductsByUserId(userId);
+    }
+
+    @GetMapping("/reports")
+    public ResponseEntity<PageResponse<ProductReportDTO>> getProductReports(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String sort,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String costValue,
+            @RequestParam(required = false) String sellingValue,
+            @RequestParam(required = false) Integer quantityStock,
+            @RequestParam(required = false) String costTotal,
+            @RequestParam(required = false) String sellingTotal,
+            @RequestParam(required = false) Long userId
+    ) {
+        Page<ProductReportDTO> productReportDTOS = productService.getListProductReports(page, size, sort, name, costValue, sellingValue,
+                quantityStock, costTotal, sellingTotal, userId
+        );
+        String prevPage = "/product/list?page=" + (productReportDTOS.hasPrevious() ? page - 1 : page);
+        String nextPage = "/product/list?page=" + (productReportDTOS.hasNext() ? page + 1 : page);
+        PageResponse<ProductReportDTO> response = new PageResponse<>(
+                productReportDTOS.getContent(),
+                productReportDTOS.getNumber(),
+                productReportDTOS.getTotalPages(),
+                prevPage,
+                nextPage
+        );
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -111,4 +145,5 @@ public class ProductController {
         return ResponseEntity.noContent().build();
 
     }
+
 }

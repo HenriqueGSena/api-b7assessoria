@@ -1,24 +1,26 @@
 package com.crud.b7assessoria.service;
 
 import com.crud.b7assessoria.dto.ProductDTO;
+import com.crud.b7assessoria.dto.ProductReportDTO;
 import com.crud.b7assessoria.entities.Category;
 import com.crud.b7assessoria.entities.Product;
 import com.crud.b7assessoria.entities.Users;
 import com.crud.b7assessoria.exceptions.ProductNotFoundException;
 import com.crud.b7assessoria.repository.CategoryRepository;
+import com.crud.b7assessoria.repository.ProductReportRepository;
 import com.crud.b7assessoria.repository.ProductRepository;
 import com.crud.b7assessoria.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,11 +33,15 @@ public class ProductService {
 
     private final UsersRepository usersRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UsersRepository usersRepository) {
+    private final ProductReportRepository productReportRepository;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, UsersRepository usersRepository, ProductReportRepository productReportRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.usersRepository = usersRepository;
+        this.productReportRepository = productReportRepository;
     }
+
 
     public Product createProduct(ProductDTO productDTO, String name) {
         Users user = usersRepository.findByName(name)
@@ -86,6 +92,34 @@ public class ProductService {
 
     public List<Product> findProductsByUserId(Long userId) {
         return productRepository.findByUserId(userId);
+    }
+
+    public Page<ProductReportDTO> getListProductReports(int page, int size, String sort, String name, String costValue,
+                                                        String sellingValue, Integer quantityStock, String costTotal, String sellingTotal, Long userId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
+        Users user = userId != null ? usersRepository.findById(userId).orElse(null) : null;
+        Page<Product> products = productReportRepository.findByFilterReport(name, costValue, sellingValue, quantityStock, costTotal, sellingTotal, user, pageable);
+
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        List<ProductReportDTO> productReportDTOS = products.getContent().stream().map(product -> {
+            BigDecimal costValueTotal = product.getCostValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
+            BigDecimal sellingValueTotal = product.getSellingValue().multiply(BigDecimal.valueOf(product.getQuantityStock()));
+
+            String formattedCostTotal = numberFormat.format(costValueTotal);
+            String formattedSellingTotal = numberFormat.format(sellingValueTotal);
+            String formattedCostValue = numberFormat.format(product.getCostValue());
+            String formattedSellingValue = numberFormat.format(product.getSellingValue());
+            return new ProductReportDTO(
+                    product.getId(),
+                    product.getName(),
+                    formattedCostValue,
+                    formattedSellingValue,
+                    product.getQuantityStock(),
+                    formattedCostTotal,
+                    formattedSellingTotal
+            );
+        }).collect(Collectors.toList());
+        return new PageImpl<>(productReportDTOS, pageable, products.getTotalElements());
     }
 
     public ProductDTO getProductById(Long id) {
