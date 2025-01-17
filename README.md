@@ -4,7 +4,36 @@
 
 The goal is to build a Rest API for product management. You should use Java, Spring Boot, and a relational database of your choice. You can use any other libraries/tools that help in the development of the test.
 
-## Documentação
+
+## Instalação
+
+- Baixe o repositorio
+```bash
+  git clone https://github.com/HenriqueGSena/api-b7assessoria.git
+```
+
+- Instale as dependencias do projeto
+```bash
+  mvn install
+```
+
+- Iniciando projeto
+```bash
+  mvn spring-boot:start
+```
+
+- Parando projeto
+```bash
+  mvn spring-boot:stop
+``` 
+
+- Usuario utilizado para teste
+```json
+  login: admin
+  password: admin
+``` 
+
+## Documentação Swagger
 
 [Documentação API](http://localhost:8080/swagger-ui.html)
 
