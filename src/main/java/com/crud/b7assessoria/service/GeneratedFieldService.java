@@ -4,64 +4,82 @@ import com.crud.b7assessoria.entities.Product;
 import com.crud.b7assessoria.repository.ProductRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class GeneratedFieldService {
 
+    @Autowired
     private final ProductRepository productRepository;
 
     public GeneratedFieldService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public byte[] generateFile(String format) throws IOException {
+    private static final Map<String, Function<Product, Object>> FIELD_MAPPERS = Map.of(
+            "Id", Product::getId,
+            "Name", Product::getName,
+            "Active", Product::isActive,
+            "Sku", Product::getSku,
+            "Category_Id", product -> product.getCategory() != null ? product.getCategory().getId() : null,
+            "Cost_Value", product -> product.getCostValue() != null ? product.getCostValue().doubleValue() : null,
+            "Icms", product -> product.getIcms() != null ? product.getIcms().doubleValue() : null,
+            "Selling_Value", product -> product.getSellingValue() != null ? product.getSellingValue().doubleValue() : null,
+            "Registration", product -> product.getRegistrationDate() != null ? product.getRegistrationDate().toString() : null,
+            "Quantity_Stock", Product::getQuantityStock
+    );
+
+    public byte[] generateFile(String format, List<String> fields) throws IOException {
+        List<String> validFields = validateField(fields);
+
         if ("csv".equalsIgnoreCase(format)) {
-            return generateFieldCsv();
+            return generateFieldCsv(validFields);
         } else if ("xlsx".equalsIgnoreCase(format)) {
-            return generateFieldXlsx();
+            return generateFieldXlsx(validFields);
         } else {
             throw new IllegalArgumentException("Formato inválido: " + format);
         }
     }
 
-    private byte[] generateFieldXlsx() throws IOException {
+    private byte[] generateFieldXlsx(List<String> fields) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Product");
 
+            // Cabeçalhos
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"Id", "Name", "Active", "Sku", "Category_Id", "Cost_Value", "Icms", "Selling_Value", "Registration", "Quantity_Stock"};
-            for (int i = 0; i < columns.length; i++) {
+            for (int i = 0; i < fields.size(); i++) {
                 Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columns[i]);
+                cell.setCellValue(fields.get(i));
                 CellStyle style = workbook.createCellStyle();
                 Font font = workbook.createFont();
                 font.setBold(true);
                 style.setFont(font);
                 cell.setCellStyle(style);
             }
+
+            // Dados
             List<Product> products = productRepository.findAll();
             int rowIndex = 1;
             for (Product product : products) {
                 Row row = sheet.createRow(rowIndex++);
-                row.createCell(0).setCellValue(product.getId());
-                row.createCell(1).setCellValue(product.getName());
-                row.createCell(2).setCellValue(product.isActive());
-                row.createCell(3).setCellValue(product.getSku());
-                row.createCell(4).setCellValue(product.getCategory().getId());
-                row.createCell(5).setCellValue(product.getCostValue().doubleValue());
-                row.createCell(6).setCellValue(product.getIcms().doubleValue());
-                row.createCell(7).setCellValue(product.getSellingValue().doubleValue());
-                row.createCell(8).setCellValue(product.getRegistrationDate().toString());
-                row.createCell(9).setCellValue(product.getQuantityStock());
+                for (int i = 0; i < fields.size(); i++) {
+                    Object value = FIELD_MAPPERS.get(fields.get(i)).apply(product);
+                    if (value != null) {
+                        row.createCell(i).setCellValue(value.toString());
+                    }
+                }
             }
 
-            for (int i = 0; i < columns.length; i++) {
+            for (int i = 0; i < fields.size(); i++) {
                 sheet.autoSizeColumn(i);
             }
 
@@ -70,26 +88,30 @@ public class GeneratedFieldService {
         }
     }
 
-    private byte[] generateFieldCsv() throws IOException {
+    private byte[] generateFieldCsv(List<String> fields) throws IOException {
         List<Product> products = productRepository.findAll();
 
         try (StringWriter writer = new StringWriter()) {
-            writer.append("Id, Name, Active, Sku, Category_Id, Cost_Value, Icms, Selling_Value, Registration, Quantity_Stock\n");
-            for (Product product: products) {
-                writer.append(String.format("%d,%s,%b,%s,%d,%.2f,%.2f,%.2f,%s,%d\n",
-                        product.getId(),
-                        product.getName(),
-                        product.isActive(),
-                        product.getSku(),
-                        product.getCategory().getId(),
-                        product.getCostValue().doubleValue(),
-                        product.getIcms().doubleValue(),
-                        product.getSellingValue().doubleValue(),
-                        product.getRegistrationDate().toString(),
-                        product.getQuantityStock()
-                ));
+            // Cabeçalhos
+            writer.append(String.join(",", fields)).append("\n");
+
+            // Dados
+            for (Product product : products) {
+                List<String> values = new ArrayList<>();
+                for (String field : fields) {
+                    Object value = FIELD_MAPPERS.get(field).apply(product);
+                    values.add(value != null ? value.toString() : "");
+                }
+                writer.append(String.join(",", values)).append("\n");
             }
             return writer.toString().getBytes();
         }
     }
+
+    private List<String> validateField(List<String> fields) {
+        return  fields.stream()
+                .filter(FIELD_MAPPERS::containsKey)
+                .toList();
+    }
+
 }
